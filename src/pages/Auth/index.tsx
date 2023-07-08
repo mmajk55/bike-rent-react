@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 function Auth() {
   const [username, setUsername] = useState('');
 
-  const { handleLogin } = useAuth();
+  const { handleLogin, isLoadingUser } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -51,6 +51,7 @@ function Auth() {
               required
             />
             <button
+              disabled={isLoadingUser}
               type="submit"
               className="w-full py-3 mt-10 bg-gray-800 rounded-sm
                     font-medium text-white uppercase

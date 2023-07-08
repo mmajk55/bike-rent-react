@@ -34,12 +34,6 @@ const BikeList = () => {
           <h3 className="mt-2 text-lg font-semibold text-gray-800">
             {bikeType.toUpperCase()}
           </h3>
-          <button
-            type="button"
-            className="mt-4 px-4 py-2 text-sm font-medium text-white uppercase bg-blue-600 rounded hover:bg-blue-500 focus:outline-none focus:bg-blue-500"
-          >
-            Rent
-          </button>
         </div>
       ))}
     </div>
