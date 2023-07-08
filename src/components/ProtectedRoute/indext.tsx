@@ -6,7 +6,7 @@ const ProtectedRoute = ({ children }: PropsWithChildren) => {
   const { user } = useAuth();
 
   if (!user) {
-    return <Navigate to="/auth" />;
+    return <Navigate to="/" />;
   }
 
   return children;

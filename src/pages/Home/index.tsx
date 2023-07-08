@@ -13,7 +13,7 @@ function Home() {
     >
       <section className="w-full bg-cover bg-center py-32">
         <div className="container mx-auto text-center text-white">
-          <h1 className="text-5xl font-medium mb-6">Welcome to bike rental</h1>
+          <h1 className="text-5xl font-medium mb-6">Welcome to BikeRent</h1>
           <p className="text-xl mb-12">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra
             euismod odio, gravida pellentesque urna varius vitae.

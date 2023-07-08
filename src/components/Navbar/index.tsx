@@ -3,9 +3,9 @@ import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
-  const { handleLogout } = useAuth();
-
   const [show, setshow] = useState(false);
+
+  const { handleLogout } = useAuth();
 
   return (
     <div className="bg-white">
@@ -36,7 +36,10 @@ const Navbar = () => {
             </div>
           </div>
           <div className="hidden sm:flex flex-row space-x-4">
-            <button className="rounded-md flex space-x-2 w-24 h-10 font-normal text-sm leading-3 text-indigo-700 bg-white border border-indigo-700 focus:outline-none focus:bg-gray-200 hover:bg-gray-200 duration-150 justify-center items-center">
+            <button
+              onClick={handleLogout}
+              className="rounded-md flex space-x-2 w-24 h-10 font-normal text-sm leading-3 text-indigo-700 bg-white border border-indigo-700 focus:outline-none focus:bg-gray-200 hover:bg-gray-200 duration-150 justify-center items-center"
+            >
               Sign out
             </button>
           </div>

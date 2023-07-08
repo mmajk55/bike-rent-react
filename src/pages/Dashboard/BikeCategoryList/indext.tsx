@@ -3,21 +3,20 @@ import { LoadingSpinner } from '../../../components/Loader';
 import { BikeListProps } from '../DashboardRoutes';
 
 const BikeCategoryList = ({ groupedBikes, isLoadingBikes }: BikeListProps) => {
-  if (isLoadingBikes) {
-    <LoadingSpinner />;
-  }
-
   return (
     <>
       <h1 className="text-3xl font-semibold text-gray-800 text-center pb-10">
         Bikes to rent
       </h1>
-      {!groupedBikes && (
+      {isLoadingBikes && <LoadingSpinner />}
+      {!groupedBikes && !isLoadingBikes && (
         <h1 className="text-xl  text-gray-800 text-center">No bikes to rent</h1>
       )}
       {groupedBikes && (
         <div
-          className={`grid grid-cols-${Object.keys(groupedBikes).length} gap-2`}
+          className={`block md:grid grid-cols-${
+            Object.keys(groupedBikes).length
+          } gap-2`}
         >
           {Object.keys(groupedBikes)?.map((bikeType) => (
             <Link to={`/dashboard/${bikeType}`} key={bikeType}>
