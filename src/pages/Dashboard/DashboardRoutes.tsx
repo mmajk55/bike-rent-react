@@ -32,7 +32,7 @@ function DashboardRoutes() {
   return (
     <>
       <Navbar />
-      <div className="2xl:container 2xl:mx-auto sm:px-7 px-4 pt-24">
+      <div className="2xl:container 2xl:mx-auto sm:px-7 px-4 pt-24 pb-12">
         <Routes>
           <Route index element={<BikeCategoryList {...bikeListProps} />} />
           <Route
