@@ -6,15 +6,17 @@ interface ErrorResponse {
 }
 
 function handleError(error: Error | AxiosError | unknown) {
-  if (error instanceof Error) {
-    toast.error('An error occurred, please try again later.');
-    console.error(error);
-  }
-
+  console.log('HANDLE ERROR', error);
   if (axios.isAxiosError(error)) {
     const data = error.response?.data as ErrorResponse;
 
     toast.error(data.error);
+    return;
+  }
+
+  if (error instanceof Error) {
+    toast.error('An error occurred, please try again later.');
+    return;
   }
 }
 

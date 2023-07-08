@@ -6,8 +6,11 @@ import { z } from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import DatePicker from 'react-datepicker';
-
 import 'react-datepicker/dist/react-datepicker.css';
+import { GET_LOCATIONS_QUERY, getLocations } from '../../../services/locations';
+import { useQuery } from '@tanstack/react-query';
+import { GET_BOOKINGS_QUERY, getBookings } from '../../../services/bookings';
+import { toast } from 'react-hot-toast';
 
 type BikeRentForm = {
   bike: string;
@@ -28,10 +31,28 @@ const bikeFormSchema = z.object({
 });
 
 function BikeRentForm({ groupedBikes, isLoadingBikes }: BikeListProps) {
+  const { isLoading: isLoadingLocations, data: locations } = useQuery({
+    queryKey: [GET_LOCATIONS_QUERY],
+    queryFn: getLocations,
+  });
+
+  const { isLoading: isLoadingBookings, data: bookings } = useQuery({
+    queryKey: [GET_BOOKINGS_QUERY],
+    queryFn: getBookings,
+  });
+
+  const isLoading = isLoadingLocations || isLoadingBookings || isLoadingBikes;
+  const hasData = !!locations && !!bookings && !!groupedBikes;
+
   const { bikeType } = useParams<{ bikeType: BikeType }>();
   const navigate = useNavigate();
 
-  const { register, handleSubmit, control } = useForm<BikeRentForm>({
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<BikeRentForm>({
     resolver: zodResolver(bikeFormSchema),
   });
 
@@ -43,6 +64,14 @@ function BikeRentForm({ groupedBikes, isLoadingBikes }: BikeListProps) {
   const bikes = groupedBikes?.[bikeType];
 
   const onSubmit = (data: BikeRentForm) => {
+    if (errors) {
+      Object.keys(errors).forEach((key) => {
+        const errorMessage = errors[key as keyof typeof errors]?.message;
+
+        errorMessage && toast.error(errorMessage);
+      });
+    }
+
     console.log('DATA', data);
   };
 
@@ -52,13 +81,13 @@ function BikeRentForm({ groupedBikes, isLoadingBikes }: BikeListProps) {
         <h1 className="text-3xl font-semibold text-gray-800 text-center pb-8">
           Rent an {bikeType} bike
         </h1>
-        {isLoadingBikes && <LoadingSpinner />}
-        {!isLoadingBikes && !groupedBikes && (
+        {isLoading && <LoadingSpinner />}
+        {!isLoading && !hasData && (
           <h1 className="text-xl  text-gray-800 text-center">
             No bikes to rent
           </h1>
         )}
-        {!isLoadingBikes && groupedBikes && (
+        {!isLoading && hasData && (
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col items-center justify-start p-4 bg-white rounded-md shadow-xl">
               <label htmlFor="bike" className="mb-2 text-left">
@@ -85,8 +114,11 @@ function BikeRentForm({ groupedBikes, isLoadingBikes }: BikeListProps) {
                 id="location"
                 className="w-56 px-4 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-indigo-300"
               >
-                <option value="1">Location 1</option>
-                <option value="2">Location 2</option>
+                {locations?.map((location) => (
+                  <option value={location.id} key={location.id}>
+                    {location.name}
+                  </option>
+                ))}
               </select>
               <label htmlFor="startDate" className="mb-2">
                 Start Date
