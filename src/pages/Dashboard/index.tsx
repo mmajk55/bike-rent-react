@@ -1,7 +1,7 @@
-import SideMenu from '../../components/SideMenu';
+import Navbar from '../../components/Navbar';
 
 function Dashboard() {
-  return <SideMenu />;
+  return <Navbar />;
 }
 
 export default Dashboard;

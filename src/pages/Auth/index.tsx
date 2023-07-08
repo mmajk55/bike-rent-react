@@ -1,15 +1,21 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function Auth() {
   const [username, setUsername] = useState('');
 
   const { handleLogin } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    await handleLogin(username);
+    const user = await handleLogin(username);
+
+    if (user) {
+      navigate('/dashboard');
+    }
   };
 
   return (

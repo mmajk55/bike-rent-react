@@ -4,13 +4,13 @@ import handleError from '../utils/handleError';
 
 export type User = {
   id: number;
-  username: string;
+  name: string;
   token: string;
 };
 
 type AuthContextType = {
   user: User | null;
-  handleLogin: (username: string) => Promise<void>;
+  handleLogin: (username: string) => Promise<User | void>;
 };
 
 const defaultContext: AuthContextType = {
@@ -27,15 +27,18 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const handleLogin = async (username: string) => {
     try {
-      const { data } = await axios.post<User>('http://localhost:3300/auth', {
-        username,
-      });
-
-      const user = data;
+      const { data: user } = await axios.post<User>(
+        'http://localhost:3300/auth',
+        {
+          username,
+        }
+      );
 
       if (user.token) {
         setUser(user);
       }
+
+      return user;
     } catch (error) {
       handleError(error);
     }

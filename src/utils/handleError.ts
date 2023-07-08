@@ -7,6 +7,7 @@ interface ErrorResponse {
 
 function handleError(error: Error | AxiosError | unknown) {
   if (error instanceof Error) {
+    toast.error('An error occurred, please try again later.');
     console.error(error);
   }
 
