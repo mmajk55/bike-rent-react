@@ -2,7 +2,9 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Auth from './pages/Auth';
 import ProtectedRoute from './components/ProtectedRoute/indext';
-import Dashboard from './pages/Dashboard';
+import BikeCategoryList from './pages/Dashboard/BikeCategoryList/indext';
+import DashboardLayout from './pages/Dashboard/DashboardLayout';
+import DashboardRoutes from './pages/Dashboard/DashboardRoutes';
 
 function App() {
   return (
@@ -16,10 +18,10 @@ function App() {
           path="/dashboard/*"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <DashboardRoutes />
             </ProtectedRoute>
           }
-        />
+        ></Route>
       </Routes>
     </Router>
   );

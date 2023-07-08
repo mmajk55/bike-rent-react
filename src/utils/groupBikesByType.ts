@@ -1,7 +1,7 @@
-import { Bike } from '../types/bike';
+import { Bike, BikeType } from '../types/bike';
 
-export const groupBikesByType = (bikes: Bike[]) => {
-  return bikes.reduce((acc, bike) => {
+export const groupBikesByType = (bikes?: Bike[]) => {
+  return bikes?.reduce((acc, bike) => {
     if (!acc[bike.type]) {
       acc[bike.type] = [];
     }
@@ -9,5 +9,7 @@ export const groupBikesByType = (bikes: Bike[]) => {
     acc[bike.type].push(bike);
 
     return acc;
-  }, {} as { [key: string]: Bike[] });
+  }, {} as { [key in BikeType]: Bike[] });
 };
+
+export type GroupedBikes = ReturnType<typeof groupBikesByType>;

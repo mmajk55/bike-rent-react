@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useContext, useState } from 'react';
 import handleError from '../utils/handleError';
 import { User } from '../types/user';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { loginUser } from '../services/auth';
 
 type AuthContextType = {
@@ -26,29 +26,25 @@ export const useAuth = () => useContext(AuthContext);
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AuthContextType['user']>(null);
 
-  const loginMutation = useMutation((username: string) => loginUser(username));
+  const { mutateAsync, isLoading } = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (data) => {
+      setUser(data);
+    },
+    onError: (error) => {
+      handleError(error);
+    },
+  });
 
   const handleLogout = () => setUser(null);
-
-  const handleLogin = async (username: string) => {
-    try {
-      const user = await loginMutation.mutateAsync(username);
-
-      setUser(user);
-
-      return user;
-    } catch (error) {
-      handleError(error);
-    }
-  };
 
   return (
     <AuthContext.Provider
       value={{
-        handleLogin,
+        handleLogin: mutateAsync,
         user,
         handleLogout,
-        isLoadingUser: loginMutation.isLoading,
+        isLoadingUser: isLoading,
       }}
     >
       {children}
