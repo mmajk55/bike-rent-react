@@ -16,22 +16,16 @@ const Navbar = () => {
               BikeRent
             </h1>
           </div>
-          {/* <div className="hidden sm:flex flex-row items-center space-x-6">
+          <div className="hidden sm:flex flex-row items-center space-x-6">
             <div className="flex flex-row space-x-6">
               <a
                 href="#"
                 className="text-lg font-normal text-gray-800 hover:text-indigo-700 duration-150"
               >
-                Home
-              </a>
-              <a
-                href="#"
-                className="text-lg font-normal text-gray-800 hover:text-indigo-700 duration-150"
-              >
-                About
+                My bookings
               </a>
             </div>
-          </div> */}
+          </div>
           <div className="hidden sm:flex flex-row space-x-4">
             <button className="rounded-md flex space-x-2 w-24 h-10 font-normal text-sm leading-3 text-indigo-700 bg-white border border-indigo-700 focus:outline-none focus:bg-gray-200 hover:bg-gray-200 duration-150 justify-center items-center">
               Sign out

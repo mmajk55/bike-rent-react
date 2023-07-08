@@ -1,12 +1,7 @@
 import axios from 'axios';
 import { ReactNode, createContext, useContext, useState } from 'react';
 import handleError from '../utils/handleError';
-
-export type User = {
-  id: number;
-  name: string;
-  token: string;
-};
+import { User } from '../types/user';
 
 type AuthContextType = {
   user: User | null;
