@@ -1,16 +1,8 @@
 import { Link } from 'react-router-dom';
 import { LoadingSpinner } from '../../../components/Loader';
-import { GroupedBikes } from '../../../utils/groupBikesByType';
+import { BikeListProps } from '../DashboardRoutes';
 
-export interface BikeCategoryListProps {
-  groupedBikes: GroupedBikes;
-  isLoadingBikes: boolean;
-}
-
-const BikeCategoryList = ({
-  groupedBikes,
-  isLoadingBikes,
-}: BikeCategoryListProps) => {
+const BikeCategoryList = ({ groupedBikes, isLoadingBikes }: BikeListProps) => {
   if (isLoadingBikes) {
     <LoadingSpinner />;
   }

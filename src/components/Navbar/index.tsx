@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const { handleLogout } = useAuth();
@@ -12,18 +13,26 @@ const Navbar = () => {
         {/* For large and Medium-sized Screen */}
         <div className="flex justify-between ">
           <div className=" flex space-x-3 items-center">
-            <h1 className=" font-normal text-2xl leading-6 text-gray-800">
-              BikeRent
-            </h1>
+            <Link to="/dashboard">
+              <h1 className=" font-normal text-2xl leading-6 text-gray-800 hover:text-indigo-700">
+                BikeRent
+              </h1>
+            </Link>
           </div>
           <div className="hidden sm:flex flex-row items-center space-x-6">
             <div className="flex flex-row space-x-6">
-              <a
-                href="#"
+              <Link
+                to="#"
                 className="text-lg font-normal text-gray-800 hover:text-indigo-700 duration-150"
               >
                 My bookings
-              </a>
+              </Link>
+              <Link
+                to="/dashboard"
+                className="text-lg font-normal text-gray-800 hover:text-indigo-700 duration-150"
+              >
+                Bikes to rent
+              </Link>
             </div>
           </div>
           <div className="hidden sm:flex flex-row space-x-4">
