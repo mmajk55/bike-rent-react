@@ -3,6 +3,7 @@ import handleError from '../utils/handleError';
 import { User } from '../types/user';
 import { useMutation } from '@tanstack/react-query';
 import { loginUser } from '../services/auth';
+import axios from 'axios';
 
 type AuthContextType = {
   user: User | null;
@@ -29,7 +30,13 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { mutateAsync, isLoading } = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      setUser(data);
+      if (data.token) {
+        setUser(data);
+
+        axios.defaults.headers.common = {
+          Authorization: `Bearer ${data.token}`,
+        };
+      }
     },
     onError: (error) => {
       handleError(error);

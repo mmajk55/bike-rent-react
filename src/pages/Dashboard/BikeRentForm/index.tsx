@@ -10,24 +10,17 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { GET_LOCATIONS_QUERY, getLocations } from '../../../services/locations';
 import { useQuery } from '@tanstack/react-query';
 import { GET_BOOKINGS_QUERY, getBookings } from '../../../services/bookings';
-import { toast } from 'react-hot-toast';
 
 type BikeRentForm = {
   bike: string;
   location: string;
-  startDate: Date;
-  endDate: Date;
+  duration: [Date, Date];
 };
 
 const bikeFormSchema = z.object({
   bike: z.string().nonempty(),
   location: z.string().nonempty(),
-  startDate: z.date(),
-  endDate: z
-    .instanceof(Date, { message: 'The Date field is required.' })
-    .refine((date) => {
-      return date >= new Date(Date.now());
-    }, 'The date must be in the future.'),
+  duration: z.date().array().length(2),
 });
 
 function BikeRentForm({ groupedBikes, isLoadingBikes }: BikeListProps) {
@@ -42,7 +35,7 @@ function BikeRentForm({ groupedBikes, isLoadingBikes }: BikeListProps) {
   });
 
   const isLoading = isLoadingLocations || isLoadingBookings || isLoadingBikes;
-  const hasData = !!locations && !!bookings && !!groupedBikes;
+  const hasRequiredFormData = !!locations && !!bookings && !!groupedBikes;
 
   const { bikeType } = useParams<{ bikeType: BikeType }>();
   const navigate = useNavigate();
@@ -64,30 +57,22 @@ function BikeRentForm({ groupedBikes, isLoadingBikes }: BikeListProps) {
   const bikes = groupedBikes?.[bikeType];
 
   const onSubmit = (data: BikeRentForm) => {
-    if (errors) {
-      Object.keys(errors).forEach((key) => {
-        const errorMessage = errors[key as keyof typeof errors]?.message;
-
-        errorMessage && toast.error(errorMessage);
-      });
-    }
-
     console.log('DATA', data);
   };
 
   return (
     <div className="w-full flex justify-center">
-      <div className="w-1/2">
+      <div className="md:w-1/2">
         <h1 className="text-3xl font-semibold text-gray-800 text-center pb-8">
           Rent an {bikeType} bike
         </h1>
         {isLoading && <LoadingSpinner />}
-        {!isLoading && !hasData && (
+        {!isLoading && !hasRequiredFormData && (
           <h1 className="text-xl  text-gray-800 text-center">
             No bikes to rent
           </h1>
         )}
-        {!isLoading && hasData && (
+        {!isLoading && hasRequiredFormData && (
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col items-center justify-start p-4 bg-white rounded-md shadow-xl">
               <label htmlFor="bike" className="mb-2 text-left">
@@ -120,44 +105,31 @@ function BikeRentForm({ groupedBikes, isLoadingBikes }: BikeListProps) {
                   </option>
                 ))}
               </select>
-              <label htmlFor="startDate" className="mb-2">
-                Start Date
+              <label htmlFor="startDate" className="mb-1">
+                Duration
               </label>
               <Controller
                 control={control}
-                name="startDate"
+                name="duration"
                 render={({ field }) => (
                   <DatePicker
                     placeholderText="Select date"
                     onChange={(date) => {
                       if (!date) return;
-                      field.onChange(date);
-                      console.log('DATE', date);
+
+                      field.onChange(date as [Date, Date]);
                     }}
-                    selected={field.value}
+                    selectsRange
+                    startDate={field.value[0]}
+                    endDate={field.value[1]}
+                    minDate={new Date()}
                     className="w-56 px-4 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-indigo-300"
                   />
                 )}
               />
-              <label htmlFor="startDate" className="mb-2">
-                End Date
-              </label>
-              <Controller
-                control={control}
-                name="endDate"
-                render={({ field }) => (
-                  <DatePicker
-                    placeholderText="Select date"
-                    onChange={(date) => {
-                      if (!date) return;
-                      field.onChange(date);
-                      console.log('DATE', date);
-                    }}
-                    selected={field.value}
-                    className="w-56 px-4 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-indigo-300"
-                  />
-                )}
-              />
+              {errors.duration && (
+                <p className="text-red-500 mb-2">{errors.duration.message}</p>
+              )}
               <button
                 type="submit"
                 className="w-full px-4 py-2 mt-2 text-white rounded-md bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring focus:border-blue-300"
