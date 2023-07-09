@@ -1,12 +1,7 @@
 import { Link } from 'react-router-dom';
 import { UserBooking } from '../../../types/user';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteBooking } from '../../../services/bookings';
 import { useAuth } from '../../../context/AuthContext';
-import { GET_USER_DATA_QUERY } from '../../../services/user';
-import toast from 'react-hot-toast';
-import handleError from '../../../utils/handleError';
-import moment from 'moment';
+import BookingCard from '../../../components/BookingCard';
 
 type MyBookingsProps = {
   userBookings?: UserBooking[];
@@ -14,27 +9,6 @@ type MyBookingsProps = {
 
 function MyBookings({ userBookings }: MyBookingsProps) {
   const { userId } = useAuth();
-  const queryClient = useQueryClient();
-
-  const cancelBookingMutation = useMutation({
-    mutationFn: deleteBooking,
-    onSuccess: async () => {
-      toast.success('Booking cancelled successfully');
-
-      await queryClient.invalidateQueries([GET_USER_DATA_QUERY, userId]);
-    },
-    onError: (error) => {
-      handleError(error);
-    },
-  });
-
-  const handleCancelBooking = async (bookingId: number) => {
-    const confirmed = window.confirm(
-      'Are you sure you want to cancel this booking?'
-    );
-
-    confirmed && (await cancelBookingMutation.mutateAsync(bookingId));
-  };
 
   if (!userBookings) {
     return (
@@ -54,39 +28,9 @@ function MyBookings({ userBookings }: MyBookingsProps) {
     <div>
       <h1 className="text-3xl font-bold mb-8 text-center">Manage Bookings</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {userBookings.map((booking) => {
-          const isPastBooking =
-            moment(booking.end_time).local().toDate() < moment().toDate();
-          const cardClassName = isPastBooking ? 'bg-gray-300' : 'bg-white';
-
-          return (
-            <div
-              key={booking.id}
-              className={`rounded-lg shadow-md p-6 ${cardClassName}`}
-            >
-              <p className="text-lg font-semibold mb-2">
-                Bike: {booking.bikeType}
-              </p>
-              <p className="text-gray-500 mb-2">
-                Location: {booking.locationName}
-              </p>
-              <p className="text-gray-500 mb-2">
-                Start Time: {moment(booking.start_time).local().format('LL')}
-              </p>
-              <p className="text-gray-500 mb-2">
-                End Time: {moment(booking.end_time).local().format('LL')}
-              </p>
-              {!isPastBooking && (
-                <button
-                  onClick={() => handleCancelBooking(booking.id)}
-                  className="px-4 py-1 bg-red-500 text-white rounded-md hover:bg-red-600"
-                >
-                  Cancel
-                </button>
-              )}
-            </div>
-          );
-        })}
+        {userBookings.map((booking) => (
+          <BookingCard key={booking.id} booking={booking} userId={userId!} />
+        ))}
       </div>
     </div>
   );

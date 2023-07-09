@@ -22,7 +22,7 @@ function DashboardRoutes() {
 
   const { isLoadingUser, user, userError } = useUserData();
 
-  const naviate = useNavigate();
+  const navigate = useNavigate();
 
   const groupedBikes = groupBikesByType(bikes);
 
@@ -32,7 +32,7 @@ function DashboardRoutes() {
   };
 
   if (userError) {
-    naviate('/auth');
+    navigate('/auth');
   }
 
   return (
