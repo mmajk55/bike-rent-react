@@ -1,50 +1,42 @@
-import {
-  ReactNode,
-  createContext,
-  useCallback,
-  useContext,
-  useState,
-} from 'react';
+import { ReactNode, createContext, useContext, useState } from 'react';
 import handleError from '../utils/handleError';
-import { User } from '../types/user';
 import { useMutation } from '@tanstack/react-query';
-import { loginUser } from '../services/auth';
+import { LoginResponse, loginUser } from '../services/auth';
 import axios from 'axios';
 
-type AuthContextType = {
-  user: User | null;
+type AuthContext = {
+  userId: number | null;
   isLoadingUser: boolean;
-  handleLogin: (username: string) => Promise<User | void>;
+  handleLogin: (username: string) => Promise<LoginResponse | void>;
   handleLogout: () => void;
-  updateUserCoins: (coins: number) => void;
 };
 
-const defaultContext: AuthContextType = {
-  user: null,
+const defaultContext: AuthContext = {
+  userId: null,
   isLoadingUser: false,
   handleLogin: () => Promise.resolve(),
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   handleLogout: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  updateUserCoins: () => {},
 };
 
-const AuthContext = createContext<AuthContextType>(defaultContext);
+const AuthContext = createContext<AuthContext>(defaultContext);
 
 export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<AuthContextType['user']>(null);
+  const [userId, setUserId] = useState<number | null>(null);
 
   const { mutateAsync, isLoading } = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      if (data.token) {
-        setUser(data);
-
+      if (data.token && data.userId) {
         axios.defaults.headers.common = {
           Authorization: `Bearer ${data.token}`,
         };
+
+        setUserId(data.userId);
+
+        return data.userId;
       }
     },
     onError: (error) => {
@@ -52,27 +44,15 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     },
   });
 
-  const updateUserCoins = useCallback((coins: number) => {
-    setUser((prevUser) => {
-      if (!prevUser) return null;
-
-      return {
-        ...prevUser,
-        coins,
-      };
-    });
-  }, []);
-
-  const handleLogout = () => setUser(null);
+  const handleLogout = () => setUserId(null);
 
   return (
     <AuthContext.Provider
       value={{
         handleLogin: mutateAsync,
-        user,
         handleLogout,
         isLoadingUser: isLoading,
-        updateUserCoins,
+        userId,
       }}
     >
       {children}

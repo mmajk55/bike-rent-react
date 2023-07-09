@@ -1,11 +1,23 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
-const Navbar = () => {
+type NavbarProps = {
+  userName: string;
+  coins: number;
+};
+
+const Navbar = ({ userName, coins }: NavbarProps) => {
   const [show, setshow] = useState(false);
 
-  const { handleLogout, user } = useAuth();
+  const { handleLogout } = useAuth();
+
+  const linkClasses =
+    'text-lg font-normal text-gray-800 hover:text-indigo-700 duration-150';
+  const activeLinkClasses = 'text-lg font-normal text-indigo-700 duration-150';
+
+  const getLinkClass = (isActive: boolean) =>
+    isActive ? activeLinkClasses : linkClasses;
 
   return (
     <div className="bg-white">
@@ -21,27 +33,29 @@ const Navbar = () => {
           </div>
           <div className="hidden sm:flex flex-row items-center space-x-6">
             <div className="flex flex-row space-x-6">
-              <Link
-                to="#"
-                className="text-lg font-normal text-gray-800 hover:text-indigo-700 duration-150"
+              <NavLink
+                to="/dashboard/my-bookings"
+                className={({ isActive }) => getLinkClass(isActive)}
+                end
               >
                 My bookings
-              </Link>
-              <Link
+              </NavLink>
+              <NavLink
                 to="/dashboard"
-                className="text-lg font-normal text-gray-800 hover:text-indigo-700 duration-150"
+                className={({ isActive }) => getLinkClass(isActive)}
+                end
               >
                 Bikes to rent
-              </Link>
+              </NavLink>
             </div>
           </div>
           <div className="hidden sm:flex flex-row space-x-4">
             <div className="flex flex-row items-center space-x-2">
               <span className="text-lg font-normal text-gray-800">
-                {user?.name}
+                {userName}
               </span>
               <span className="text-lg font-normal text-gray-800">
-                {user?.coins}$
+                {coins}$
               </span>
             </div>
             <button

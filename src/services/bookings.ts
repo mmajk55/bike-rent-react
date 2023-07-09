@@ -11,15 +11,6 @@ export const getBookings = async () => {
   return data;
 };
 
-export const GET_USER_BOOKINGS_QUERY = 'GET_USER_BOOKINGS_QUERY';
-export const getUserBookings = async (userId: number) => {
-  const { data } = await axios.get<Booking[]>(
-    `http://localhost:3300/bookings/${userId}`
-  );
-
-  return data;
-};
-
 export const createBooking = async (params: Omit<Booking, 'id'>) => {
   const { data } = await axios.post<{ coins: number }>(
     'http://localhost:3300/bookings',
@@ -27,4 +18,8 @@ export const createBooking = async (params: Omit<Booking, 'id'>) => {
   );
 
   return data.coins;
+};
+
+export const deleteBooking = async (id: number) => {
+  await axios.delete(`http://localhost:3300/bookings/${id}`);
 };

@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { GET_LOCATIONS_QUERY, getLocations } from '../../../services/locations';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   GET_BOOKINGS_QUERY,
   createBooking,
@@ -17,6 +17,7 @@ import {
 import { useAuth } from '../../../context/AuthContext';
 import { toast } from 'react-hot-toast';
 import handleError from '../../../utils/handleError';
+import { GET_USER_DATA_QUERY } from '../../../services/user';
 
 type BikeRentForm = {
   bike: string;
@@ -45,23 +46,23 @@ function BikeRentForm({ groupedBikes, isLoadingBikes }: BikeListProps) {
     resolver: zodResolver(bikeFormSchema),
   });
 
+  const { userId } = useAuth();
+  const { bikeType } = useParams<{ bikeType: BikeType }>();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const bookingMutation = useMutation({
     mutationFn: createBooking,
-    onSuccess: (data: number) => {
+    onSuccess: async () => {
       toast.success('Booking created successfully');
 
-      updateUserCoins(data);
-
       reset();
+      await queryClient.invalidateQueries([GET_USER_DATA_QUERY, userId]);
     },
     onError: (error) => {
       handleError(error);
     },
   });
-
-  const { user, updateUserCoins } = useAuth();
-  const { bikeType } = useParams<{ bikeType: BikeType }>();
-  const navigate = useNavigate();
 
   const isLoading = isLoadingLocations || isLoadingBookings || isLoadingBikes;
   const hasRequiredFormData = !!locations && !!bookings && !!groupedBikes;
@@ -79,7 +80,7 @@ function BikeRentForm({ groupedBikes, isLoadingBikes }: BikeListProps) {
     const bookingData = {
       bike_id: Number(data.bike),
       location_id: Number(data.location),
-      user_id: user!.id,
+      user_id: userId!,
       start_time: startDate,
       end_time: endDate,
     };
@@ -91,7 +92,7 @@ function BikeRentForm({ groupedBikes, isLoadingBikes }: BikeListProps) {
     <div className="w-full flex justify-center">
       <div className="md:w-1/2">
         <h1 className="text-3xl font-semibold text-gray-800 text-center pb-8">
-          Rent an {bikeType} bike
+          Rent a {bikeType} bike
         </h1>
         {isLoading && <LoadingSpinner />}
         {!isLoading && !hasRequiredFormData && (

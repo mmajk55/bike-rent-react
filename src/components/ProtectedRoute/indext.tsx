@@ -3,9 +3,9 @@ import { useAuth } from '../../context/AuthContext';
 import { PropsWithChildren } from 'react';
 
 const ProtectedRoute = ({ children }: PropsWithChildren) => {
-  const { user } = useAuth();
+  const { userId } = useAuth();
 
-  if (!user) {
+  if (!userId) {
     return <Navigate to="/" />;
   }
 
