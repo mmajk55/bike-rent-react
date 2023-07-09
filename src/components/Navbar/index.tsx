@@ -134,6 +134,22 @@ const Navbar = ({ userName, coins }: NavbarProps) => {
           className={`${show ? 'block' : 'hidden'} sm:hidden mt-4 mx-auto`}
         >
           <div className="flex flex-col gap-4 mt-4 w-80 mx-auto ">
+            <div className="flex flex-col items-center space-x-2">
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) => getLinkClass(isActive)}
+                end
+              >
+                Bikes to rent
+              </NavLink>
+              <NavLink
+                to="/dashboard/my-bookings"
+                className={({ isActive }) => getLinkClass(isActive)}
+                end
+              >
+                My bookings
+              </NavLink>
+            </div>
             <button
               onClick={handleLogout}
               className="rounded-md flex space-x-2 w-full h-10 font-normal text-sm leading-3 text-indigo-700 bg-indigo-600 bg-opacity-0 hover:opacity-100 duration-100 border border-indigo-700 focus:outline-none focus:bg-gray-200 hover:bg-gray-200 duration-150 justify-center items-center"
