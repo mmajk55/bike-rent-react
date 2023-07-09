@@ -14,9 +14,7 @@ const BikeCategoryList = ({ groupedBikes, isLoadingBikes }: BikeListProps) => {
       )}
       {groupedBikes && (
         <div
-          className={`block md:grid grid-cols-${
-            Object.keys(groupedBikes).length
-          } gap-2`}
+          className={`block md:grid grid-cols-3 gap-2`}
         >
           {Object.keys(groupedBikes)?.map((bikeType) => (
             <Link to={`/dashboard/${bikeType}`} key={bikeType}>

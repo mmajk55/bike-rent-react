@@ -8,8 +8,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { GET_LOCATIONS_QUERY, getLocations } from '../../../services/locations';
-import { useQuery } from '@tanstack/react-query';
-import { GET_BOOKINGS_QUERY, getBookings } from '../../../services/bookings';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  GET_BOOKINGS_QUERY,
+  createBooking,
+  getBookings,
+} from '../../../services/bookings';
+import { useAuth } from '../../../context/AuthContext';
+import { toast } from 'react-hot-toast';
+import handleError from '../../../utils/handleError';
 
 type BikeRentForm = {
   bike: string;
@@ -34,20 +41,30 @@ function BikeRentForm({ groupedBikes, isLoadingBikes }: BikeListProps) {
     queryFn: getBookings,
   });
 
-  const isLoading = isLoadingLocations || isLoadingBookings || isLoadingBikes;
-  const hasRequiredFormData = !!locations && !!bookings && !!groupedBikes;
+  const { register, handleSubmit, control, reset } = useForm<BikeRentForm>({
+    resolver: zodResolver(bikeFormSchema),
+  });
 
+  const bookingMutation = useMutation({
+    mutationFn: createBooking,
+    onSuccess: (data: number) => {
+      toast.success('Booking created successfully');
+
+      updateUserCoins(data);
+
+      reset();
+    },
+    onError: (error) => {
+      handleError(error);
+    },
+  });
+
+  const { user, updateUserCoins } = useAuth();
   const { bikeType } = useParams<{ bikeType: BikeType }>();
   const navigate = useNavigate();
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<BikeRentForm>({
-    resolver: zodResolver(bikeFormSchema),
-  });
+  const isLoading = isLoadingLocations || isLoadingBookings || isLoadingBikes;
+  const hasRequiredFormData = !!locations && !!bookings && !!groupedBikes;
 
   if (!bikeType) {
     navigate('/dashboard');
@@ -57,7 +74,17 @@ function BikeRentForm({ groupedBikes, isLoadingBikes }: BikeListProps) {
   const bikes = groupedBikes?.[bikeType];
 
   const onSubmit = (data: BikeRentForm) => {
-    console.log('DATA', data);
+    const [startDate, endDate] = data.duration;
+
+    const bookingData = {
+      bike_id: Number(data.bike),
+      location_id: Number(data.location),
+      user_id: user!.id,
+      start_time: startDate,
+      end_time: endDate,
+    };
+
+    bookingMutation.mutate(bookingData);
   };
 
   return (
@@ -120,17 +147,15 @@ function BikeRentForm({ groupedBikes, isLoadingBikes }: BikeListProps) {
                       field.onChange(date as [Date, Date]);
                     }}
                     selectsRange
-                    startDate={field.value[0]}
-                    endDate={field.value[1]}
+                    startDate={field.value?.[0]}
+                    endDate={field.value?.[1]}
                     minDate={new Date()}
                     className="w-56 px-4 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-indigo-300"
                   />
                 )}
               />
-              {errors.duration && (
-                <p className="text-red-500 mb-2">{errors.duration.message}</p>
-              )}
               <button
+                disabled={bookingMutation.isLoading}
                 type="submit"
                 className="w-full px-4 py-2 mt-2 text-white rounded-md bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring focus:border-blue-300"
               >

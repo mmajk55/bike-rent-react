@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const Navbar = () => {
   const [show, setshow] = useState(false);
 
-  const { handleLogout } = useAuth();
+  const { handleLogout, user } = useAuth();
 
   return (
     <div className="bg-white">
@@ -36,6 +36,14 @@ const Navbar = () => {
             </div>
           </div>
           <div className="hidden sm:flex flex-row space-x-4">
+            <div className="flex flex-row items-center space-x-2">
+              <span className="text-lg font-normal text-gray-800">
+                {user?.name}
+              </span>
+              <span className="text-lg font-normal text-gray-800">
+                {user?.coins}$
+              </span>
+            </div>
             <button
               onClick={handleLogout}
               className="rounded-md flex space-x-2 w-24 h-10 font-normal text-sm leading-3 text-indigo-700 bg-white border border-indigo-700 focus:outline-none focus:bg-gray-200 hover:bg-gray-200 duration-150 justify-center items-center"

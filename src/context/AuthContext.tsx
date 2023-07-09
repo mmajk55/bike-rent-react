@@ -1,4 +1,10 @@
-import { ReactNode, createContext, useContext, useState } from 'react';
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+} from 'react';
 import handleError from '../utils/handleError';
 import { User } from '../types/user';
 import { useMutation } from '@tanstack/react-query';
@@ -10,6 +16,7 @@ type AuthContextType = {
   isLoadingUser: boolean;
   handleLogin: (username: string) => Promise<User | void>;
   handleLogout: () => void;
+  updateUserCoins: (coins: number) => void;
 };
 
 const defaultContext: AuthContextType = {
@@ -18,6 +25,8 @@ const defaultContext: AuthContextType = {
   handleLogin: () => Promise.resolve(),
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   handleLogout: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  updateUserCoins: () => {},
 };
 
 const AuthContext = createContext<AuthContextType>(defaultContext);
@@ -43,6 +52,17 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     },
   });
 
+  const updateUserCoins = useCallback((coins: number) => {
+    setUser((prevUser) => {
+      if (!prevUser) return null;
+
+      return {
+        ...prevUser,
+        coins,
+      };
+    });
+  }, []);
+
   const handleLogout = () => setUser(null);
 
   return (
@@ -52,6 +72,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         user,
         handleLogout,
         isLoadingUser: isLoading,
+        updateUserCoins,
       }}
     >
       {children}
