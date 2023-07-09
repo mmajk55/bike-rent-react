@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import { UserBooking } from '../../../types/user';
-import { useAuth } from '../../../context/AuthContext';
-import BookingCard from '../../../components/BookingCard';
+import { UserBooking } from 'types/user';
+import { useAuth } from 'context/AuthContext';
+import BookingCard from 'components/BookingCard';
 
 type MyBookingsProps = {
   userBookings?: UserBooking[];

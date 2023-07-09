@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Location } from '../types/locations';
+import { Location } from 'types/locations';
 
 export const GET_LOCATIONS_QUERY = 'GET_LOCATIONS_QUERY';
 export const getLocations = async () => {

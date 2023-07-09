@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Bike } from '../types/bike';
+import { Bike } from 'types/bike';
 
 export const GET_BIKES_QUERY = 'GET_BIKES';
 export const getBikes = async () => {

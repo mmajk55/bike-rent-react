@@ -1,4 +1,4 @@
-import { Bike, BikeType } from '../types/bike';
+import { Bike, BikeType } from 'types/bike';
 
 export const groupBikesByType = (bikes?: Bike[]) => {
   return bikes?.reduce((acc, bike) => {

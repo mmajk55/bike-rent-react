@@ -1,10 +1,10 @@
 import moment from 'moment';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { deleteBooking } from '../../services/bookings';
-import { GET_USER_DATA_QUERY } from '../../services/user';
-import handleError from '../../utils/handleError';
-import { UserBooking } from '../../types/user';
+import { deleteBooking } from 'services/bookings';
+import { GET_USER_DATA_QUERY } from 'services/user';
+import handleError from 'utils/handleError';
+import { UserBooking } from 'types/user';
 
 type BookingCardProps = {
   booking: UserBooking;

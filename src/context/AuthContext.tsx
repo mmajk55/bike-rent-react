@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useContext, useState } from 'react';
-import handleError from '../utils/handleError';
+import handleError from 'utils/handleError';
 import { useMutation } from '@tanstack/react-query';
-import { LoginResponse, loginUser } from '../services/auth';
+import { LoginResponse, loginUser } from 'services/auth';
 import axios from 'axios';
 
 type AuthContext = {

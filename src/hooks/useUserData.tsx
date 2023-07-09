@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { useAuth } from '../context/AuthContext';
-import { GET_USER_DATA_QUERY, getUserData } from '../services/user';
+import { useAuth } from 'context/AuthContext';
+import { GET_USER_DATA_QUERY, getUserData } from 'services/user';
 
 const useUserData = () => {
   const { userId } = useAuth();

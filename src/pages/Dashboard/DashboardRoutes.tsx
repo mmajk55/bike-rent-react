@@ -1,13 +1,13 @@
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import BikeCategoryList from './BikeCategoryList/indext';
 import { useQuery } from '@tanstack/react-query';
-import { GET_BIKES_QUERY, getBikes } from '../../services/bikes';
-import { GroupedBikes, groupBikesByType } from '../../utils/groupBikesByType';
-import Navbar from '../../components/Navbar';
+import { GET_BIKES_QUERY, getBikes } from 'services/bikes';
+import { GroupedBikes, groupBikesByType } from 'utils/groupBikesByType';
+import Navbar from 'components/Navbar';
 import BikeRentForm from './BikeRentForm';
 import MyBookings from './MyBookings';
-import { LoadingPage } from '../../components/Loader';
-import useUserData from '../../hooks/useUserData';
+import { LoadingPage } from 'components/Loader';
+import useUserData from 'hooks/useUserData';
 
 export interface BikeListProps {
   groupedBikes?: GroupedBikes;

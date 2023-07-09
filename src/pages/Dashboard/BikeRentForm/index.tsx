@@ -1,24 +1,24 @@
 import { useParams } from 'react-router-dom';
 import { BikeListProps } from '../DashboardRoutes';
-import { BikeType } from '../../../types/bike';
-import { LoadingSpinner } from '../../../components/Loader';
+import { BikeType } from 'types/bike';
+import { LoadingSpinner } from 'components/Loader';
 import { z } from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { GET_LOCATIONS_QUERY, getLocations } from '../../../services/locations';
+import { GET_LOCATIONS_QUERY, getLocations } from 'services/locations';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   GET_UNAVAILABlE_DATES,
   createBooking,
   getUnavailableDates,
-} from '../../../services/bookings';
-import { useAuth } from '../../../context/AuthContext';
+} from 'services/bookings';
+import { useAuth } from 'context/AuthContext';
 import { toast } from 'react-hot-toast';
-import handleError from '../../../utils/handleError';
-import { GET_USER_DATA_QUERY } from '../../../services/user';
-import { getThreeDaysFromNow } from '../../../utils/dates';
+import handleError from 'utils/handleError';
+import { GET_USER_DATA_QUERY } from 'services/user';
+import { getThreeDaysFromNow } from 'utils/dates';
 import { useMemo } from 'react';
 import moment from 'moment';
 

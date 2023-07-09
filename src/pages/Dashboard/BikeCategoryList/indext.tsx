@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { LoadingSpinner } from '../../../components/Loader';
+import { LoadingSpinner } from 'components/Loader';
 import { BikeListProps } from '../DashboardRoutes';
 
 const BikeCategoryList = ({ groupedBikes, isLoadingBikes }: BikeListProps) => {

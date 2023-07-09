@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Booking } from '../types/bookings';
+import { Booking } from 'types/bookings';
 
 export type GetUnavailableDatesParams = {
   bikeId?: string;

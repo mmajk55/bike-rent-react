@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { User } from '../types/user';
+import { User } from 'types/user';
 
 export const GET_USER_DATA_QUERY = 'GET_USER_DATA_QUERY';
 export const getUserData = async (id: number) => {
