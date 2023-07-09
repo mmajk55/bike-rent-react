@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
 import { UserBooking } from '../../../types/user';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { GET_BOOKINGS_QUERY, deleteBooking } from '../../../services/bookings';
+import { deleteBooking } from '../../../services/bookings';
 import { useAuth } from '../../../context/AuthContext';
 import { GET_USER_DATA_QUERY } from '../../../services/user';
 import toast from 'react-hot-toast';
 import handleError from '../../../utils/handleError';
+import moment from 'moment';
 
 type MyBookingsProps = {
   userBookings?: UserBooking[];
@@ -21,7 +22,6 @@ function MyBookings({ userBookings }: MyBookingsProps) {
       toast.success('Booking cancelled successfully');
 
       await queryClient.invalidateQueries([GET_USER_DATA_QUERY, userId]);
-      await queryClient.invalidateQueries([GET_BOOKINGS_QUERY]);
     },
     onError: (error) => {
       handleError(error);
@@ -55,7 +55,8 @@ function MyBookings({ userBookings }: MyBookingsProps) {
       <h1 className="text-3xl font-bold mb-8 text-center">Manage Bookings</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {userBookings.map((booking) => {
-          const isPastBooking = new Date(booking.end_time) < new Date();
+          const isPastBooking =
+            moment(booking.end_time).local().toDate() < moment().toDate();
           const cardClassName = isPastBooking ? 'bg-gray-300' : 'bg-white';
 
           return (
@@ -70,10 +71,10 @@ function MyBookings({ userBookings }: MyBookingsProps) {
                 Location: {booking.locationName}
               </p>
               <p className="text-gray-500 mb-2">
-                Start Time: {new Date(booking.start_time).toLocaleDateString()}
+                Start Time: {moment(booking.start_time).local().format('LL')}
               </p>
               <p className="text-gray-500 mb-2">
-                End Time: {new Date(booking.end_time).toLocaleDateString()}
+                End Time: {moment(booking.end_time).local().format('LL')}
               </p>
               {!isPastBooking && (
                 <button

@@ -44,7 +44,10 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     },
   });
 
-  const handleLogout = () => setUserId(null);
+  const handleLogout = () => {
+    setUserId(null);
+    axios.defaults.headers.common = {};
+  };
 
   return (
     <AuthContext.Provider

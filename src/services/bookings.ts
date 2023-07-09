@@ -1,10 +1,23 @@
 import axios from 'axios';
-import { Location } from '../types/locations';
 import { Booking } from '../types/bookings';
 
-export const GET_BOOKINGS_QUERY = 'GET_BOOKINGS_QUERY';
-export const getBookings = async () => {
-  const { data } = await axios.get<Booking[]>('http://localhost:3300/bookings');
+export type GetUnavailableDatesParams = {
+  bikeId?: string;
+  locationId?: string;
+};
+
+export const GET_UNAVAILABlE_DATES = 'GET_UNAVAILABlE_DATES';
+export const getUnavailableDates = async ({
+  bikeId,
+  locationId,
+}: GetUnavailableDatesParams) => {
+  if (!bikeId || !locationId) {
+    return [];
+  }
+
+  const { data } = await axios.get<string[]>(
+    `http://localhost:3300/bookings/unavailable/${bikeId}/${locationId}`
+  );
 
   return data;
 };
