@@ -7,14 +7,14 @@ import axios from 'axios';
 type AuthContext = {
   userId: number | null;
   isLoadingUser: boolean;
-  handleLogin: (username: string) => Promise<LoginResponse | void>;
+  handleLogin: (username: string) => Promise<LoginResponse> | void;
   handleLogout: () => void;
 };
 
 const defaultContext: AuthContext = {
   userId: null,
-  isLoadingUser: false,
-  handleLogin: () => Promise.resolve(),
+  isLoadingUser: false, // eslint-disable-next-line @typescript-eslint/no-empty-function
+  handleLogin: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   handleLogout: () => {},
 };

@@ -3,6 +3,6 @@ export interface Booking {
   user_id: number;
   bike_id: number;
   location_id: number;
-  start_time: Date;
-  end_time: Date;
+  start_time: string;
+  end_time: string;
 }

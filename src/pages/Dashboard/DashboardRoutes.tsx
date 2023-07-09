@@ -35,9 +35,6 @@ function DashboardRoutes() {
     naviate('/auth');
   }
 
-  console.log('GROUPED BIKES', groupedBikes);
-  console.log('USER', user);
-
   return (
     <>
       {isLoadingUser && <LoadingPage />}

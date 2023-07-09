@@ -18,6 +18,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { toast } from 'react-hot-toast';
 import handleError from '../../../utils/handleError';
 import { GET_USER_DATA_QUERY } from '../../../services/user';
+import { getThreeDaysFromNow } from '../../../utils/dates';
 
 type BikeRentForm = {
   bike: string;
@@ -57,7 +58,9 @@ function BikeRentForm({ groupedBikes, isLoadingBikes }: BikeListProps) {
       toast.success('Booking created successfully');
 
       reset();
+
       await queryClient.invalidateQueries([GET_USER_DATA_QUERY, userId]);
+      await queryClient.invalidateQueries([GET_BOOKINGS_QUERY]);
     },
     onError: (error) => {
       handleError(error);
@@ -81,8 +84,8 @@ function BikeRentForm({ groupedBikes, isLoadingBikes }: BikeListProps) {
       bike_id: Number(data.bike),
       location_id: Number(data.location),
       user_id: userId!,
-      start_time: startDate,
-      end_time: endDate,
+      start_time: startDate.toISOString(),
+      end_time: endDate.toISOString(),
     };
 
     bookingMutation.mutate(bookingData);
@@ -142,15 +145,15 @@ function BikeRentForm({ groupedBikes, isLoadingBikes }: BikeListProps) {
                 render={({ field }) => (
                   <DatePicker
                     placeholderText="Select date"
-                    onChange={(date) => {
-                      if (!date) return;
+                    onChange={(dates) => {
+                      if (!dates.length) return;
 
-                      field.onChange(date as [Date, Date]);
+                      field.onChange(dates as [Date, Date]);
                     }}
                     selectsRange
                     startDate={field.value?.[0]}
                     endDate={field.value?.[1]}
-                    minDate={new Date()}
+                    minDate={getThreeDaysFromNow()}
                     className="w-56 px-4 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-indigo-300"
                   />
                 )}

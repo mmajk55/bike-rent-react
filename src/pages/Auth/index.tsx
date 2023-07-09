@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 
 function Auth() {
   const [username, setUsername] = useState('');
@@ -11,11 +12,14 @@ function Auth() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const user = await handleLogin(username);
+    const data = await handleLogin(username);
 
-    if (user) {
+    if (data && data.token) {
       navigate('/dashboard');
+      return;
     }
+
+    toast.error('Something went wrong. Please try again.');
   };
 
   return (

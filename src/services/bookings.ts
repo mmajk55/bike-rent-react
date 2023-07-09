@@ -4,9 +4,7 @@ import { Booking } from '../types/bookings';
 
 export const GET_BOOKINGS_QUERY = 'GET_BOOKINGS_QUERY';
 export const getBookings = async () => {
-  const { data } = await axios.get<Location[]>(
-    'http://localhost:3300/bookings'
-  );
+  const { data } = await axios.get<Booking[]>('http://localhost:3300/bookings');
 
   return data;
 };
