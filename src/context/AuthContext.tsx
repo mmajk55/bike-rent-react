@@ -26,10 +26,25 @@ export const useAuth = () => useContext(AuthContext);
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userId, setUserId] = useState<number | null>(null);
 
+  if (!userId) {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      axios.defaults.headers.common = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      setUserId(Number(localStorage.getItem('userId')));
+    }
+  }
+
   const { mutateAsync, isLoading } = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
       if (data.token && data.userId) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userId', data.userId.toString());
+
         axios.defaults.headers.common = {
           Authorization: `Bearer ${data.token}`,
         };
@@ -47,6 +62,8 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const handleLogout = () => {
     setUserId(null);
     axios.defaults.headers.common = {};
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
   };
 
   return (
