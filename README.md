@@ -1,7 +1,14 @@
-# How to run project
+# How to run a project
 
 1. Clone this repository
-2. Install packages `npm install`
-3. Prepare backend server (instuctions are inside the nodejs-recruitment-task-master )
-4. Run backend server on port :3300
-5. When server is started run `npm run dev` in root folder
+
+## Prepare Server
+
+1. Go to `server` and run `npm install`
+2. Migrate database and seed with data: `npm run migrate && npm run seed`
+3. Start server on :3300 port: `npm run dev`
+
+## Run Client app
+
+1. Go to root folder and install packages: `npm install`
+2. Start client app: `npm run dev`
